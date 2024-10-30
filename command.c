@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "command.h"
 
@@ -34,18 +35,14 @@ char *find_absolute_path(char *command)
 
     while (directory != NULL)
     {
-        char full_path[MAX_PATH_LENGTH];
-        snprintf(full_path, sizeof(full_path), "%s/%s", directory, command); // Concatenate the directory and command
-        struct stat buffer; // Stores file information
-        if (stat(full_path, &buffer) == 0 && (buffer.st_mode & S_IXUSR)) // Check if the file exists and is executable
+        char path[MAX_PATH_LENGTH];
+        snprintf(path, sizeof(path), "%s/%s", directory, command); // Concatenate directory and command
+
+        if (access(path, X_OK) == 0) // Check if the command exists
         {
             free(path_copy);
-            return strdup(full_path);
+            return strdup(path);
         }
-
         directory = strtok(NULL, ":");
     }
-
-    free(path_copy);
-    return NULL;
 }

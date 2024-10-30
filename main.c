@@ -24,11 +24,6 @@ int main(int argc, char *argv[])
     int arg_count;
 
     split_command(command, &args, &arg_count);
-    if (arg_count == 0)
-    {
-        fprintf(stderr, "No command provided\n");
-        return 1;
-    }
 
     char *command_path = args[0];
     if (command_path[0] != '/') // Checks if the command is an absolute path
@@ -43,11 +38,6 @@ int main(int argc, char *argv[])
     }
 
     pid_t pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        return 1;
-    }
 
     if (pid == 0) // Child Process
     {
@@ -72,7 +62,6 @@ int main(int argc, char *argv[])
                 perror("Couldn't open output file");
                 exit(1);
             }
-            dprintf(output_fd, "Command: %s\n", command);
         }
         dup2(output_fd, STDOUT_FILENO);
         if (output_fd != STDOUT_FILENO)
