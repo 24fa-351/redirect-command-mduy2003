@@ -23,19 +23,19 @@ void split_command(const char *command, char ***args, int *arg_count)
 
 char *find_absolute_path(char *command)
 {
-    char *path_env = getenv("PATH"); // Get the PATH environment variable
-    if (!path_env)
+    char *path_environment = getenv("PATH"); // Get the PATH environment variable
+    if (!path_environment)
     {
         return NULL;
     }
 
-    char *path_copy = strdup(path_env);
-    char *dir = strtok(path_copy, ":"); // Split using colons because PATH is colon-separated
+    char *path_copy = strdup(path_environment);
+    char *directory = strtok(path_copy, ":"); // Split using colons because PATH is colon-separated
 
-    while (dir != NULL)
+    while (directory != NULL)
     {
         char full_path[MAX_PATH_LENGTH];
-        snprintf(full_path, sizeof(full_path), "%s/%s", dir, command); // Concatenate the directory and command
+        snprintf(full_path, sizeof(full_path), "%s/%s", directory, command); // Concatenate the directory and command
         struct stat buffer; // Stores file information
         if (stat(full_path, &buffer) == 0 && (buffer.st_mode & S_IXUSR)) // Check if the file exists and is executable
         {
@@ -43,7 +43,7 @@ char *find_absolute_path(char *command)
             return strdup(full_path);
         }
 
-        dir = strtok(NULL, ":");
+        directory = strtok(NULL, ":");
     }
 
     free(path_copy);

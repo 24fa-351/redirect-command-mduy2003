@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         int output_fd = STDOUT_FILENO;
         if (strcmp(output, "-") != 0) // Checks if output file is not "-"
         {
-            output_fd = open(output, O_WRONLY | O_CREAT | O_TRUNC, 0666); //
+            output_fd = open(output, O_WRONLY | O_CREAT | O_TRUNC);
             if (output_fd == -1)
             {
                 perror("Couldn't open output file");
